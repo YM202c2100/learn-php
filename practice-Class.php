@@ -2,7 +2,7 @@
 
 class MyFileWriter{
   private string $fileName;
-  private string $fullText = '';
+  protected string $fullText = '';
   public const APPEND = FILE_APPEND;
 
   function __construct(string $fileName){
@@ -27,6 +27,14 @@ class MyFileWriter{
   }
 }
 
+class LogWriter extends MyFileWriter {
+  function append(string $content):self{
+    $timeStr = date('Y/m/d H:i:s');
+    $this->fullText .= sprintf('%s %s', $timeStr, $content);
+    return $this;
+  }
+}
+
 $file = new MyFileWriter("sample.txt");
 $file->append('Hello, Bob.')
     ->newline()
@@ -36,3 +44,15 @@ $file->append('Hello, Bob.')
     ->commit()
     ->append('Good night, Bob.')
     ->commit(MyFileWriter::APPEND);
+
+$info = new LogWriter('info.log');
+$error = new LogWriter('error.log');
+
+$info->append('これは通常ログです。')
+    ->newline()
+    ->commit(LogWriter::APPEND);
+
+$error->append('これはエラーログです。')
+    ->newline()
+    ->commit(LogWriter::APPEND);
+    
