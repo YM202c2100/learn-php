@@ -1,0 +1,3 @@
+Hello, Bob.
+Bye, Bob.
+Good night, Bob.
