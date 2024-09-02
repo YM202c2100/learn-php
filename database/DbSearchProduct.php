@@ -9,6 +9,9 @@
 <?php
   if(!isset($_GET["product_id"])) die();
   
+  require_once "model.product.php";
+  use model\ProductModel;
+
   $message = "";
   try{
     $dsn = 'mysql:host=localhost;port=8889;dbname=test_phpdb';
@@ -21,13 +24,13 @@
     $pst->bindValue(':id', $_GET['product_id'], PDO::PARAM_INT);
 
     $pst->execute();
-    $result = $pst->fetch(PDO::FETCH_ASSOC);
+    $result = $pst->fetchAll(PDO::FETCH_CLASS, ProductModel::class)[0];
 
     if(empty($result)
-       ||$result["delete_flg"] === 1){
+       ||$result->delete_flg === 1){
       $message = "一致する商品が見つかりません。";
     }else{
-      $message = "商品名は{$result["name"]}です。";
+      $message = "商品名は{$result->name}です。";
     }
 
   }catch(Exception){
