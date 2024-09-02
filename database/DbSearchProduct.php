@@ -19,15 +19,15 @@
 
     $pst = $conn->prepare(
       "SELECT `name`, `delete_flg` from mst_products
-       where id = :id"
+       where id = :id
+       and delete_flg = 0"
     );
     $pst->bindValue(':id', $_GET['product_id'], PDO::PARAM_INT);
 
     $pst->execute();
     $result = $pst->fetchAll(PDO::FETCH_CLASS, ProductModel::class)[0];
 
-    if(empty($result)
-       ||$result->delete_flg === 1){
+    if(empty($result)){
       $message = "一致する商品が見つかりません。";
     }else{
       $message = "商品名は{$result->name}です。";
